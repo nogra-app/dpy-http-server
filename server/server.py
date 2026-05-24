@@ -176,13 +176,12 @@ class HTTPServer:
         self._host = host or "0.0.0.0"
         self._port = port or 8000
         self._routes: RouteTable = RouteTable(routes)
-        self._web = web.Application()
+        self._web = web.Application(loop=self._bot.loop)
         self._runner: web.AppRunner = None
         self._site: web.TCPSite = None
         self._is_running = False
-        loop = asyncio.get_running_loop()
-        self._start_fut: asyncio.Future = loop.create_future()
-        self._stop_fut: asyncio.Future = loop.create_future()
+        self._start_fut: asyncio.Future = self._bot.loop.create_future()
+        self._stop_fut: asyncio.Future = self._bot.loop.create_future()
 
     @property
     def host(self) -> str:
